@@ -17,6 +17,20 @@ const N8N_WEBHOOK_URL = process.env.N8N_WEBHOOK_URL;
 console.log('🤖 Бот запущено!');
 
 // Обробка всіх повідомлень
+bot.onText(/\/start/, async (msg) => {
+    try {
+        const response = await axios.post(N8N_WEBHOOK_URL, {
+        message: msg
+        }); 
+
+        console.log('✅ Дані відправлено в n8n:', response.status);
+        
+    } catch {
+        console.error('❌ Помилка при відправці в n8n:', error.message);
+        bot.sendMessage(msg.chat.id, '❌ Помилка обробки повідомлення');
+    }
+})
+
 bot.on('message', async (msg) => {
   console.log('📩 Отримано повідомлення:', msg);
   
