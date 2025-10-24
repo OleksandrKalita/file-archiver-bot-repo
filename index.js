@@ -48,26 +48,21 @@ bot.onText("Завантажити файл 📨", async (msg) => {
     }
 })
 
-bot.on('callback_query', async (query) => {
-    console.log("Point in code...");
-    try {
-        const data = query.data;
 
-        if (data.startsWith('menu_cmd_')) {
+// Додайте логування старту
+console.log('🤖 Бот запущено з polling:', bot.isPolling());
 
-            const response = await axios.post(N8N_WEBHOOK_GET_FILE_MENU, {
-                message: query
-            }); 
+// Додайте обробник помилок polling
+bot.on('polling_error', (error) => {
+    console.error('❌ Помилка polling:', error.code, error.message);
+});
 
-        }
 
-        console.log('✅ Дані menu_cmd_ відправлено в n8n:', response.status);
-
-    } catch {
-        console.error('❌ Помилка при відправці menu_cmd_ в n8n:', error.message);
-        bot.sendMessage(msg.chat.id, '❌ Помилка обробки повідомлення');
-    }
-})
+bot.on('callback_query', (query) => {
+    console.log('🔔 CALLBACK QUERY СПРАЦЮВАВ!');
+    console.log('Data:', query.data);
+    console.log('Full query:', JSON.stringify(query, null, 2));
+});
 
 /*
 bot.on('message', async (msg) => {
