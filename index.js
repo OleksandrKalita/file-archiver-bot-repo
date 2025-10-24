@@ -48,11 +48,15 @@ bot.onText("Завантажити файл 📨", async (msg) => {
     }
 })
 
-bot.onText(/^menu_cmd_.*/gm, async (msg) => {
+bot.on('callback_query', async (msg) => {
     try {
-        const response = await axios.post(N8N_WEBHOOK_GET_FILE_MENU, {
-            message: msg
-        }); 
+        if (data.startsWith('menu_cmd_')) {
+
+            const response = await axios.post(N8N_WEBHOOK_GET_FILE_MENU, {
+                message: msg
+            }); 
+
+        }
 
         console.log('✅ Дані menu_cmd_ відправлено в n8n:', response.status);
 
