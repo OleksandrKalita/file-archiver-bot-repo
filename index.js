@@ -49,6 +49,7 @@ bot.onText("Завантажити файл 📨", async (msg) => {
 })
 
 bot.on('callback_query', async (query) => {
+    console.log("Point in code...");
     try {
         const data = query.data;
 
