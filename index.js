@@ -35,33 +35,63 @@ bot.onText(/\/start/, async (msg) => {
 })
 
 bot.onText("Завантажити файл 📨", async (msg) => {
-    try {
-        const response = await axios.post(N8N_WEBHOOK_GET_FILE_STRUCTURE, {
-            message: msg
-        }); 
+    // try {
+    //     const response = await axios.post(N8N_WEBHOOK_GET_FILE_STRUCTURE, {
+    //         message: msg
+    //     }); 
 
-        console.log('✅ Дані відправлено в n8n:', response.status);
+    //     console.log('✅ Дані відправлено в n8n:', response.status);
 
-    } catch {
-        console.error('❌ Помилка при відправці в n8n:', error.message);
-        bot.sendMessage(msg.chat.id, '❌ Помилка обробки повідомлення');
-    }
+    // } catch {
+    //     console.error('❌ Помилка при відправці в n8n:', error.message);
+    //     bot.sendMessage(msg.chat.id, '❌ Помилка обробки повідомлення');
+    // }
+
+    const chatId = msg.chat.id;
+    
+    bot.sendMessage(chatId, 'Оберіть опцію:', {
+        reply_markup: {
+            inline_keyboard: [
+                [
+                    { text: '📁 Папка 1', callback_data: 'menu_cmd_folder_1' },
+                    { text: '📁 Папка 2', callback_data: 'menu_cmd_folder_2' }
+                ],
+                [
+                    { text: '📄 Файл 1', callback_data: 'menu_cmd_file_1' }
+                ],
+                [
+                    { text: '⚙️ Налаштування', callback_data: 'menu_cmd_settings' },
+                    { text: '❌ Закрити', callback_data: 'menu_cmd_close' }
+                ]
+            ]
+        }
+    });
 })
 
 
-// Додайте логування старту
-console.log('🤖 Бот запущено з polling:', bot.isPolling());
-
-// Додайте обробник помилок polling
-bot.on('polling_error', (error) => {
-    console.error('❌ Помилка polling:', error.code, error.message);
-});
-
-
-bot.on('callback_query', (query) => {
-    console.log('🔔 CALLBACK QUERY СПРАЦЮВАВ!');
-    console.log('Data:', query.data);
-    console.log('Full query:', JSON.stringify(query, null, 2));
+bot.on('callback_query', async (query) => {
+    const data = query.data;
+    const chatId = query.message.chat.id;
+    
+    // Прибираємо "загрузка"
+    await bot.answerCallbackQuery(query.id);
+    
+    if (data === 'menu_cmd_folder_1') {
+        bot.sendMessage(chatId, '📁 Ви обрали Папку 1');
+    } 
+    else if (data === 'menu_cmd_folder_2') {
+        bot.sendMessage(chatId, '📁 Ви обрали Папку 2');
+    }
+    else if (data === 'menu_cmd_file_1') {
+        bot.sendMessage(chatId, '📄 Ви обрали Файл 1');
+    }
+    else if (data === 'menu_cmd_settings') {
+        bot.sendMessage(chatId, '⚙️ Налаштування...');
+    }
+    else if (data === 'menu_cmd_close') {
+        // Видаляємо повідомлення з кнопками
+        bot.deleteMessage(chatId, query.message.message_id);
+    }
 });
 
 /*
