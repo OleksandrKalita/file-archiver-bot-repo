@@ -15,6 +15,7 @@ const bot = new TelegramBot(process.env.TELEGRAM_BOT_TOKEN, { polling: true });
 const N8N_WEBHOOK_URL = process.env.N8N_WEBHOOK_URL;
 const N8N_WEBHOOK_GET_ACCESS_URL = process.env.N8N_WEBHOOK_GET_ACCESS_URL;
 const N8N_WEBHOOK_GET_FILE_STRUCTURE = process.env.N8N_WEBHOOK_GET_FILE_STRUCTURE;
+const N8N_WEBHOOK_GET_FILE_MENU = process.env.N8N_WEBHOOK_GET_FILE_MENU;
 
 console.log('🤖 Бот запущено!');
 
@@ -36,6 +37,20 @@ bot.onText(/\/start/, async (msg) => {
 bot.onText("Завантажити файл 📨", async (msg) => {
     try {
         const response = await axios.post(N8N_WEBHOOK_GET_FILE_STRUCTURE, {
+            message: msg
+        }); 
+
+        console.log('✅ Дані відправлено в n8n:', response.status);
+
+    } catch {
+        console.error('❌ Помилка при відправці в n8n:', error.message);
+        bot.sendMessage(msg.chat.id, '❌ Помилка обробки повідомлення');
+    }
+})
+
+bot.onText(/^menu_cmd_.*/, async (msg) => {
+    try {
+        const response = await axios.post(N8N_WEBHOOK_GET_FILE_MENU, {
             message: msg
         }); 
 
