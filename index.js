@@ -48,16 +48,16 @@ bot.onText("Завантажити файл 📨", async (msg) => {
     }
 })
 
-bot.onText(/^menu_cmd_.*/, async (msg) => {
+bot.onText(/^menu_cmd_.*/gm, async (msg) => {
     try {
         const response = await axios.post(N8N_WEBHOOK_GET_FILE_MENU, {
             message: msg
         }); 
 
-        console.log('✅ Дані відправлено в n8n:', response.status);
+        console.log('✅ Дані menu_cmd_ відправлено в n8n:', response.status);
 
     } catch {
-        console.error('❌ Помилка при відправці в n8n:', error.message);
+        console.error('❌ Помилка при відправці menu_cmd_ в n8n:', error.message);
         bot.sendMessage(msg.chat.id, '❌ Помилка обробки повідомлення');
     }
 })
